@@ -1,16 +1,16 @@
-const nodemailer = require("nodemailer")
+import nodemailer from 'nodemailer'
 
 // 定制邮件服务
-const sendInfo = {
-  // 验证码
-  code: '1234',
-  // 验证码过期时间
-  expire: '2024-02-05',
-  // 收件人邮箱
-  email: '3129166417@qq.com',
-  // 收件人昵称
-  user: '海绵先生'
-}
+// const sendInfo = {
+//   // 验证码
+//   code: '1234',
+//   // 验证码过期时间
+//   expire: '2024-02-05',
+//   // 收件人邮箱
+//   email: '3129166417@qq.com',
+//   // 收件人昵称
+//   user: '海绵先生'
+// }
 
 // 使用邮件服务
 const transporter = nodemailer.createTransport({
@@ -28,7 +28,7 @@ const transporter = nodemailer.createTransport({
 const url = 'http://www.imooc.com'
 
 // 发送邮件
-async function main() {
+async function send(sendInfo) {
   const info = await transporter.sendMail({
     // 谁发送的邮件(发件人和发送人邮箱)
     from: '"大帅" <3129166417@qq.com>',
@@ -44,7 +44,7 @@ async function main() {
         <div style="border: 1px solid #dcdcdc;color: #676767;width: 600px; margin: 0 auto; padding-bottom: 50px;position: relative;">
             <div style="height: 60px; background: #393d49; line-height: 60px; color: #58a36f; font-size: 18px;padding-left: 10px;">知识论坛——欢迎来到官方论坛</div>
             <div style="padding: 25px">
-              <div>您好，${sendInfo.user}童鞋, 重置链接有效时间30分钟. 请在${sendInfo.expire}之前重置您的密码: </div>
+              <div>您好，${sendInfo.user}, 重置链接有效时间30分钟. 请在${sendInfo.expire}之前重置您的密码: </div>
               <a href="${url}" style="padding: 10px 20px; color: #fff; background: #009e94; display: inline-block;margin: 15px 0;">立即重置密码</a>
               <div style="padding: 5px; background: #f2f2f2;">如果该邮件不是由你本人操作, 请勿进行激活! 否则你的邮箱将会被他人绑定</div>
             </div>
@@ -54,7 +54,11 @@ async function main() {
     `
   })
   // 控制台打印邮件发送成功信息
-  console.log("Message sent: %s", info.messageId)
+  // console.log("Message sent: %s", info.messageId)
+
+  return 'Message sent: %s', info.messageId
 }
 
-main().catch(console.error)
+// send().catch(console.error)
+
+export default send

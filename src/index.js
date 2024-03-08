@@ -28,6 +28,6 @@ if(!isDevMode) {
 app.use(middleware)
 app.use(router())
 
-app.listen('8090', function() {
-  console.log('http://127.0.0.1:8090')
+app.listen('3000', function() {
+  console.log('http://127.0.0.1:3000')
 })

@@ -31,12 +31,16 @@ client.on('error', err => {
 })
 
 // 插入一个键值
-const setValue = (key, value) => {
-  if (typeof value === undefined || typeof value === null || value === '') {
+const setValue = (key, value, time) => {
+  if (typeof value === 'undefined' || value === null || value === '') {
     return
   }
   if (typeof value === 'string') {
-    return client.set(key, value)
+    if (typeof time !== 'undefined') {
+      return client.set(key, value, 'EX', time)
+    } else {
+      return client.set(key, value)
+    }
   }
   if (typeof value === 'object') {
     Object.keys(value).forEach(item => {
@@ -69,7 +73,7 @@ const delValue = key => {
   })
 }
 
-export default {
+export {
   client,
   setValue,
   getValue,

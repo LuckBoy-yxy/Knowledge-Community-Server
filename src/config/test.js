@@ -1,6 +1,5 @@
-import config from './RedisConfig'
+import { setValue, getValue, getHValue, delValue } from './RedisConfig'
 
-const { setValue, getValue, getHValue, delValue } = config
 setValue('test', 'test message from redis client')
 
 getValue('test').then(res => {

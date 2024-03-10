@@ -31,7 +31,6 @@ class LoginController {
     if (await checkCode(sid, code)) {
       let checkUserPassword = false
       let user = await UsersModel.findOne({ username })
-      console.log(user)
       if (user.password === password) {
         checkUserPassword = true
       }

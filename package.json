@@ -10,7 +10,8 @@
     "dev": "cross-env NODE_ENV=dev nodemon --exec babel-node --inspect ./src/index.js",
     "clean": "rimraf dist",
     "watch": "cross-env NODE_ENV=dev webpack --watch --progress --hide-modules --config config/webpack.config.dev.js",
-    "debug": "nodemon --inspect ./dist/server.bundle.js"
+    "debug": "nodemon --inspect ./dist/server.bundle.js",
+    "start:dist": "npm-run-all -p watch debug"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +44,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "cross-env": "^7.0.3",
     "nodemon": "^3.0.3",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^5.0.5",
     "terser-webpack-plugin": "^1.4.1",
     "webpack": "^4.47.0",

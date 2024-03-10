@@ -2,6 +2,8 @@ import send from '../config/MailConfig'
 import moment from 'moment'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config'
+import { checkCode } from '../common/utils'
+import UsersModel from '../model/User'
 
 class LoginController {
   constructor() {}
@@ -25,18 +27,39 @@ class LoginController {
     }
   }
    async login (ctx, next) {
-    const token = jsonwebtoken.sign(
-      {
-        _id: 'hmxs_hmbb'
-      },
-      config.JWT_SECRET,
-      {
-        expiresIn: '1d'
+    const { body: { username, password, code, sid } } = ctx.request
+    if (await checkCode(sid, code)) {
+      let checkUserPassword = false
+      let user = await UsersModel.findOne({ username })
+      console.log(user)
+      if (user.password === password) {
+        checkUserPassword = true
       }
-    )
-    ctx.body = {
-      code: 200,
-      msg: token
+      if (checkUserPassword) {
+        const token = jsonwebtoken.sign(
+          {
+            _id: 'hmxs_hmbb'
+          },
+          config.JWT_SECRET,
+          {
+            expiresIn: '1d'
+          }
+        )
+        ctx.body = {
+          code: 200,
+          msg: token
+        }
+      } else {
+        ctx.body = {
+          code: 404,
+          msg: '用户名或密码错误'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '图形验证码不正确'
+      }
     }
   }
 }

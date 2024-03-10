@@ -8,17 +8,28 @@ import statics from 'koa-static'
 import json from 'koa-json'
 import compose from 'koa-compose'
 import compress from 'koa-compress'
+import JWT from 'koa-jwt'
+import config from './config/index'
+import errorHandle from './common/errorHandle'
 
 const app = new Koa()
 
 const isDevMode = process.env.NODE_ENV === 'production' ? false : true
+
+const jwt = JWT({
+  secret: config.JWT_SECRET
+}).unless({
+  path: [/^\/public/, /\/login/]
+})
 
 const middleware = compose([
   koaBody(),
   statics(path.join(__dirname, '../public')),
   cors(),
   json({ pretty: false, param: 'pretty' }),
-  helmet()
+  helmet(),
+  errorHandle,
+  jwt
 ])
 
 if(!isDevMode) {

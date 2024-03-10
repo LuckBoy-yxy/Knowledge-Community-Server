@@ -1,11 +1,12 @@
 import send from '../config/MailConfig'
 import moment from 'moment'
+import jsonwebtoken from 'jsonwebtoken'
+import config from '../config'
 
 class LoginController {
   constructor() {}
   async forget (ctx, next) {
     const { body } = ctx.request
-    console.log(body)
     try {
       const result = await send({
         code: '1234',
@@ -21,6 +22,21 @@ class LoginController {
       }
     } catch (e) {
       console.log(e)
+    }
+  }
+   async login (ctx, next) {
+    const token = jsonwebtoken.sign(
+      {
+        _id: 'hmxs_hmbb'
+      },
+      config.JWT_SECRET,
+      {
+        expiresIn: '1d'
+      }
+    )
+    ctx.body = {
+      code: 200,
+      msg: token
     }
   }
 }

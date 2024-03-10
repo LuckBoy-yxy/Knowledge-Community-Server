@@ -1,6 +1,6 @@
 import svgCaptcha from 'svg-captcha'
-import { setValue, getValue } from '@/config/RedisConfig'
-// import { setValue, getValue } from '../config/RedisConfig'
+// import { setValue, getValue } from '@/config/RedisConfig'
+import { setValue, getValue } from '../config/RedisConfig'
 
 class PublicController {
   constructor() {}
@@ -16,7 +16,7 @@ class PublicController {
     })
     setValue(body.sid, newCaptcha.text, 10 * 60)
     getValue(body.sid).then(res => {
-      console.log(res)
+      // console.log(res)
     })
 
     ctx.body = {

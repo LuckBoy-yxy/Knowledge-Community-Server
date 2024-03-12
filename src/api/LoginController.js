@@ -61,6 +61,44 @@ class LoginController {
       }
     }
   }
+  async reg (ctx, next) {
+    const { body: { username, name, password, code, sid } } = ctx.request
+    const msg = {}
+    if (await checkCode(sid, code)) {
+      let isCheck = true
+      const user1 = await UsersModel.findOne({ username })
+      if (user1 !== null) {
+        msg.email = ['此邮箱已被注册, 请进行忘记密码操作']
+        isCheck = false
+      }
+      const user2 = await UsersModel.findOne({ name })
+      if (user2 !== null) {
+        msg.name = ['此用户名已被注册']
+        isCheck = false
+      }
+      if (isCheck) {
+        const user = new UsersModel({
+          username,
+          name,
+          password,
+          created: moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+        const res = await user.save()
+        ctx.body = {
+          code: 200,
+          data: res,
+          msg: '注册成功'
+        }
+        return
+      }
+    } else {
+      msg.code = ['验证码错误或失效']
+    }
+    ctx.body = {
+      code: 500,
+      msg
+    }
+  }
 }
 
 export default new LoginController()

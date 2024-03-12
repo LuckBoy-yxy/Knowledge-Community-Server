@@ -4,7 +4,9 @@ import mongoose from '../config/DBHelpler'
 const Schema = mongoose.Schema
 const userSchema = new Schema({
   'username': { type: String },
-  'password': { type: String }
+  'name': { type: String },
+  'password': { type: String },
+  'created': { type: String }
 })
 
 // 通过数据库对象, 拿到对应的表

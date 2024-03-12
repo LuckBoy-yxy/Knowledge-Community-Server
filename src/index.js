@@ -19,7 +19,7 @@ const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 const jwt = JWT({
   secret: config.JWT_SECRET
 }).unless({
-  path: [/^\/public/, /\/login/]
+  path: [/^\/public/, /\/login/, /\/reg/]
 })
 
 const middleware = compose([

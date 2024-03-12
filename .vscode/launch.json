@@ -13,7 +13,7 @@
       "console": "integratedTerminal",
       "runtimeArgs": [
         "run-script",
-        "start:dist"
+        "dev"
       ],
       "skipFiles": [
         "<node_internals>/**"

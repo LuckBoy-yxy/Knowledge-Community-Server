@@ -18,13 +18,13 @@ class ContentController {
     if (typeof body.isTop !== 'undefined' && body.isTop !== '') {
       options.isTop = body.isTop
     }
-    if (typeof body.isEnd !== 'undefined' && body.isEnd !== '') {
-      options.isEnd = body.isEnd
-    }
+    // if (typeof body.isEnd !== 'undefined' && body.isEnd !== '') {
+    //   options.isEnd = body.isEnd
+    // }
     if (typeof body.tag !== 'undefined' && body.tag !== '') {
       options.tags = { $elemMatch: { name: body.tag } }
     }
-    if (typeof body.status !== 'undefined') {
+    if (typeof body.status !== 'undefined' && body.status !== '') {
       options.status = body.status
     }
 

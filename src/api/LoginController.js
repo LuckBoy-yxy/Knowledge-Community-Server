@@ -46,7 +46,10 @@ class LoginController {
         )
         ctx.body = {
           code: 200,
-          msg: token
+          data: {
+            token
+          },
+          msg: '登录成功'
         }
       } else {
         ctx.body = {

@@ -38,7 +38,7 @@ PostSchema.statics = {
       .limit(pageSize)
       .populate({
         path: 'uid',
-        select: 'name'
+        select: 'name isVip pic'
       })
   }
 }

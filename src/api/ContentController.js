@@ -1,4 +1,5 @@
 import PostModel from '../model/Post'
+import LinkModel from '../model/Link'
 
 class ContentController {
   constructor () {
@@ -34,6 +35,33 @@ class ContentController {
       code: 200,
       data: result,
       msg: '获取文章列表成功'
+    }
+  }
+
+  async getTipsOrLinks (ctx, next) {
+    const { type } = ctx.query
+    let data = []
+    if (typeof type !== 'undefined' && type !== '') {
+      if (type === 'links') {
+        data = await LinkModel.find({ type: 'links' })
+      } else {
+        data = await LinkModel.find({ type: 'tips' }) 
+      }
+    }
+
+    ctx.body = {
+      code: 200,
+      data,
+      msg: '获取成功'
+    }
+  }
+
+  async getTopWeek (ctx, next) {
+    const data = await PostModel.getTopWeek()
+    ctx.body = {
+      code: 200,
+      data,
+      msg: '获取本周热议列表成功'
     }
   }
 }

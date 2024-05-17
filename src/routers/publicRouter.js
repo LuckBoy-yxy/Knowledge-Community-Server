@@ -7,5 +7,7 @@ const router = new Router()
 router.prefix('/public')
 router.get('/getCaptcha', publicController.getCaptcha)
 router.get('/list', contentController.getPostList)
+router.get('/tipsOrlinks', contentController.getTipsOrLinks)
+router.get('/topWeek', contentController.getTopWeek)
 
 export default router

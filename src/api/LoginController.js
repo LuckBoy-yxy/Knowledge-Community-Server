@@ -35,6 +35,11 @@ class LoginController {
         checkUserPassword = true
       }
       if (checkUserPassword) {
+        const arr = ['password', 'username', 'roles']
+        const userObj = user.toJSON()
+        arr.forEach(item => {
+          delete userObj[item]
+        })
         const token = jsonwebtoken.sign(
           {
             _id: 'hmxs_hmbb'
@@ -47,6 +52,7 @@ class LoginController {
         ctx.body = {
           code: 200,
           data: {
+            ...userObj,
             token
           },
           msg: '登录成功'

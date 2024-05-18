@@ -12,9 +12,6 @@ const LinkSchema = new Schema({
 })
 
 LinkSchema.pre('save', function (next) {
-  // 这里 moment 中不需要将 this.created 传递进去, 因为这里是在向数据表中保存一条记录
-  // 保存的时候, created 字段中是还没有值的; 这里需要做的就是在记录保存之前, 将当前的时间进行格式化之后, 存储到 created 字段中
-  // this.created = moment(this.created).format('YYYY-MM-DD HH:mm:ss')
   this.created = moment().format('YYYY-MM-DD HH:mm:ss')
   next()
 })

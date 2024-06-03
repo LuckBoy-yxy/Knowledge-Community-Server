@@ -4,6 +4,7 @@ import jsonwebtoken from 'jsonwebtoken'
 import config from '../config'
 import { checkCode } from '../common/utils'
 import UsersModel from '../model/User'
+import SignRecordModel from '../model/SignRecord'
 
 class LoginController {
   constructor() {}
@@ -50,6 +51,16 @@ class LoginController {
             expiresIn: '1d'
           }
         )
+        const signRecord = await SignRecordModel.findByUid(userObj._id)
+        if (signRecord !== null) {
+          if (moment().format('YYYY-MM-DD') === moment(signRecord.created).format('YYYY-MM-DD')) {
+            userObj.isSign = true
+          } else {
+            userObj.isSign = false
+          }
+        } else {
+          userObj.isSign = false
+        }
         ctx.body = {
           code: 200,
           data: {

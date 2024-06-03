@@ -42,7 +42,8 @@ class LoginController {
         })
         const token = jsonwebtoken.sign(
           {
-            _id: 'hmxs_hmbb'
+            // _id: 'hmxs_hmbb'
+            _id: userObj._id
           },
           config.JWT_SECRET,
           {

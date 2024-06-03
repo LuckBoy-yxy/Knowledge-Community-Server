@@ -3,7 +3,7 @@ import config from '../config/index'
 import jwt from 'jsonwebtoken'
 
 export const getJWTPayload = token => {
-  return jwt.verity(token.split(' ')[1], config.JWT_SECRET)
+  return jwt.verify(token.split(' ')[1], config.JWT_SECRET)
 }
 
 export const checkCode = async (key, value) => {

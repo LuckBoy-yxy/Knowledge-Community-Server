@@ -18,10 +18,12 @@ class UserController {
           count: user.count,
           msg: '用户今日已经签到过了'
         }
+        return
       } else {
         let fav = 0 
-        const count = user.count
-        if (moment().subtract(1, 'days').format('YYYY-MM-DD') === moment(record.lastSign).format('YYYY-MM-DD')) {
+        let count = user.count
+        if (moment().subtract(1, 'days').format('YYYY-MM-DD') === moment(record.created).format('YYYY-MM-DD')) {
+          count += 1
           if (count < 5) {
             fav = 5
           } else if (count >= 5 && count < 15) {
@@ -60,7 +62,6 @@ class UserController {
         newRecord = new SignRecordModel({
           uid: obj._id,
           favs: fav,
-          lastSign: record.created
         })
         await newRecord.save()
       }
@@ -74,7 +75,6 @@ class UserController {
       newRecord = new SignRecordModel({
         uid: obj._id,
         favs: 5,
-        lastSign: moment().format('YYYY-MM-DD HH:mm:ss')
       })
       await newRecord.save()
       result = {

@@ -27,7 +27,7 @@ class LoginController {
       console.log(e)
     }
   }
-   async login (ctx, next) {
+  async login (ctx, next) {
     const { body: { username, password, code, sid } } = ctx.request
     if (await checkCode(sid, code)) {
       let checkUserPassword = false
@@ -58,6 +58,7 @@ class LoginController {
           } else {
             userObj.isSign = false
           }
+          userObj.lastSign = signRecord.created
         } else {
           userObj.isSign = false
         }

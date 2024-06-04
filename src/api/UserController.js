@@ -14,8 +14,11 @@ class UserController {
       if (moment(record.created).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
         ctx.body = {
           code: 500,
-          favs: user.favs,
-          count: user.count,
+          data: {
+            favs: user.favs,
+            count: user.count,
+            lastSign: record.created
+          },
           msg: '用户今日已经签到过了'
         }
         return
@@ -85,7 +88,8 @@ class UserController {
     ctx.body = {
       code: 200,
       data: {
-        ...result
+        ...result,
+        lastSign: record.created
       },
       msg: '请求成功'
     }

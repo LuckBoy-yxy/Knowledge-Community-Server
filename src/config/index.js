@@ -5,9 +5,11 @@ const REDIS = {
   password: '123456'
 }
 const JWT_SECRET = 'x7&%&1YR%1*1P1$QV$&M-@W1Zx#M*&V1V1x-=^&NXQX#&xX7%YNZ&N0-xVZ=PVZ!'
+const baseUrl = process.env.NODE_ENV === 'production' ? 'http://www.toimc.com' : 'http://localhost:8080'
 
 export default {
   DB_URL,
   REDIS,
-  JWT_SECRET
+  JWT_SECRET,
+  baseUrl
 }

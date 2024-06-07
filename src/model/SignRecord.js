@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from '../config/DBHelpler'
 import moment from 'moment'
 
 const Schema = mongoose.Schema
@@ -11,6 +11,7 @@ const SignRecordSchema = new Schema({
 
 SignRecordSchema.pre('save', function (next) {
   this.created = moment().format('YYYY-MM-DD HH:mm:ss')
+  next()
 })
 
 SignRecordSchema.statics = {
@@ -20,7 +21,7 @@ SignRecordSchema.statics = {
 }
 
 const SignRecordModel = mongoose.model(
-  'sign_record',
+  'sign_records',
   SignRecordSchema
 )
 

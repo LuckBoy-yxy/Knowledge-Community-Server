@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import config from '../config'
 
 // 定制邮件服务
 // const sendInfo = {
@@ -24,20 +25,22 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-// 重置密码链接
-const url = 'http://www.imooc.com'
-
 // 发送邮件
 async function send(sendInfo) {
+  const baseUrl = config.baseUrl
+  const route = sendInfo.type === 'email' ? '/email' : '/reset'
+  // 重置密码链接
+  const url = `${baseUrl}/#${route}?key=${sendInfo.key}`
+
   const info = await transporter.sendMail({
     // 谁发送的邮件(发件人和发送人邮箱)
     from: '"大帅" <3129166417@qq.com>',
     // 邮件发送给谁
     to: sendInfo.email,
     // 标题
-    subject: sendInfo.user !== '' ? `你好开发者, ${sendInfo.user}! 知识论坛注册码` : '知识论注册码',
+    subject: sendInfo.user !== '' && sendInfo.type !== 'email' ? `你好开发者, ${sendInfo.user}! 知识论坛注册码` : '知识论坛确认修改邮件链接',
     // 纯文本的邮件内容
-    text: `您在知识论坛中进行了注册, 您的要求码是 ${sendInfo.code} , 邀请码的过期时间: ${sendInfo.expire}`,
+    text: `您在知识论坛中进行了注册, 您的邀请码是 ${sendInfo.code} , 邀请码的过期时间: ${sendInfo.expire}`,
     // 包含的 html 元素的邮件内容
     html: `
       <body>

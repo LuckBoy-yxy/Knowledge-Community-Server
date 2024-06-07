@@ -2,6 +2,11 @@ import SignRecordModel from '../model/SignRecord'
 import UsersModel from '../model/User'
 import { getJWTPayload } from '../common/utils'
 import moment from 'moment'
+import send from '../config/MailConfig'
+import uuid from 'uuid/v4'
+import jwt from 'jsonwebtoken'
+import { setValue, getValue } from '../config/RedisConfig'
+import config from '../config'
 
 class UserController {
   async userSign (ctx, next) {
@@ -47,7 +52,7 @@ class UserController {
           })
           result = {
             favs: user.favs + fav,
-            count: user.count + count
+            count: user.count + 1
           }
         } else {
           fav = 5
@@ -81,7 +86,7 @@ class UserController {
       })
       await newRecord.save()
       result = {
-        favs: 5,
+        favs: user.favs + 5,
         count: 1
       }
     }
@@ -89,9 +94,63 @@ class UserController {
       code: 200,
       data: {
         ...result,
-        lastSign: record.created
+        lastSign: newRecord.created
       },
       msg: '请求成功'
+    }
+  }
+
+  async updateUserInfo (ctx, next) {
+    const { body } = ctx.request
+    const obj = await getJWTPayload(ctx.header.authorization)
+    const user = await UsersModel.findOne({ _id: obj._id })
+    if (body.username && body.username !== user.username) {
+      const key = uuid()
+      setValue(key, jwt.sign({
+        _id: obj._id
+      }, config.JWT_SECRET, {
+        expiresIn: '30m'
+      }))
+      const res = await send({
+        type: 'email',
+        key,
+        code: '',
+        expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
+        // email: body.username,
+        email: user.username,
+        user: user.name
+      })
+      ctx.body = {
+        code: 500,
+        data: res,
+        msg: '发送邮件成功, 请点击链接确认修改邮件账号'
+      }
+    } else {
+      const arr = ['username', 'password', 'mobile']
+      arr.forEach(item => {
+        delete body[item]
+      })
+      const res = await UsersModel.updateOne({_id: obj._id}, body)
+      if (res.n === 1 && res.ok === 1) {
+        ctx.body = {
+          code: 200,
+          msg: '用户基本信息更新成功'
+        }
+      } else {
+        ctx.body = {
+          code: 500,
+          msg: '用户基本信息更新失败'
+        }
+      }
+    }
+  }
+
+  async updateUserName (ctx, next) {
+    const body = ctx.query
+    if (body.key) {
+      const token = getValue(key)
+      const obj = getJWTPayload('Bearer' + token)
+      const arr = ['username', 'password', 'mobile']
     }
   }
 }

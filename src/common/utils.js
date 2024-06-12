@@ -45,14 +45,12 @@ const mkdir = dir => {
 }
 export const dirExists = async dir => {
   const isExists = await getStats(dir)
-  // isExists.isDirectory() 如果返回值为 true , 则表示当前目录存在
   if (isExists && isExists.isDirectory()) {
     return true
   } else if (isExists) {
     return false
   }
 
-  // 取得上级目录
   const tempDir = path.parse(dir).dir
   const status = await dirExists(tempDir)
   if (status) {

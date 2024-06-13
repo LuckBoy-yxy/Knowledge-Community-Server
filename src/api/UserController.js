@@ -181,6 +181,27 @@ class UserController {
       }
     }
   }
+
+  async changePasswd (ctx, next) {
+    const { body } = ctx.request
+    const obj = await getJWTPayload(ctx.header.authorization)
+    const user = await UsersModel.findOne({ _id: obj._id })
+    if (user.password === body.oldpwd) {
+      await UsersModel.updateOne(
+        { _id: obj._id },
+        { $set: { password: body.newpwd } }
+      )
+      ctx.body = {
+        code: 200,
+        msg: '修改密码成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '旧密码不匹配'
+      }
+    }
+  }
 }
 
 export default new UserController()

@@ -4,7 +4,8 @@ import fs from 'fs'
 import moment from 'moment'
 import uuid from 'uuid/v4'
 import config from '../config'
-import { dirExists } from '../common/utils'
+import { checkCode, dirExists, getJWTPayload } from '../common/utils'
+import UsersModel from '../model/User'
 // import mkdir from 'make-dir'
 
 class ContentController {
@@ -107,6 +108,44 @@ class ContentController {
       code: 200,
       filePath,
       msg: '上传图片成功'
+    }
+  }
+
+  async addPost (ctx, next) {
+    const { body } = ctx.request
+    const code = body.code
+    const sid = body.sid
+    const flag = await checkCode(sid, code)
+    if (flag) {
+      const obj = await getJWTPayload(ctx.header.authorization)
+      const user = await UsersModel.findById(obj._id)
+      if (body.fav > user.favs) {
+        ctx.body = {
+          code: 501,
+          msg: '积分不足'
+        }
+        return
+      } else {
+        await UsersModel.updateOne({
+          _id: obj._id
+        }, {
+          $inc: { favs: -body.fav }
+        })
+      }
+
+      const newPost = new PostModel(body)
+      newPost.uid = obj._id
+      const result = await newPost.save()
+      ctx.body = {
+        code: 200,
+        data: result,
+        msg: '帖子发布成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '图片验证码错误'
+      }
     }
   }
 }

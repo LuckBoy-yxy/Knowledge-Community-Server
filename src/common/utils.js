@@ -60,3 +60,14 @@ export const dirExists = async dir => {
     return false
   }
 }
+
+export const rename = (obj, oldKey, newKey) => {
+  Object.keys(obj).forEach(key => {
+    if (key === oldKey) {
+      obj[newKey] = obj[key]
+      delete obj[key]
+    }
+  })
+
+  return obj
+}

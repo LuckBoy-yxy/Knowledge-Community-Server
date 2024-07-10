@@ -11,5 +11,6 @@ router.get('/list', contentController.getPostList)
 router.get('/tipsOrlinks', contentController.getTipsOrLinks)
 router.get('/topWeek', contentController.getTopWeek)
 router.get('/reset-email', userController.updateUserName)
+router.get('/content/detail', contentController.getPostDetail)
 
 export default router

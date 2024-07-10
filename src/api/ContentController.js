@@ -4,7 +4,7 @@ import fs from 'fs'
 import moment from 'moment'
 import uuid from 'uuid/v4'
 import config from '../config'
-import { checkCode, dirExists, getJWTPayload } from '../common/utils'
+import { checkCode, dirExists, getJWTPayload, rename } from '../common/utils'
 import UsersModel from '../model/User'
 // import mkdir from 'make-dir'
 
@@ -146,6 +146,26 @@ class ContentController {
         code: 500,
         msg: '图片验证码错误'
       }
+    }
+  }
+
+  async getPostDetail (ctx, next) {
+    const params = ctx.query
+    if (!params.tid) {
+      ctx.body = {
+        code: 500,
+        msg: '参数错误'
+      }
+      return
+    }
+
+    const post = await PostModel.findByTid(params.tid)
+    // const post = await PostModel.findById({ _id: params.tid })
+    const result = rename(post.toJSON(), 'uid', 'user')
+    ctx.body = {
+      code: 200,
+      data: result,
+      msg: '请求成功'
     }
   }
 }

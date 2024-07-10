@@ -2,6 +2,7 @@ import Router from '@koa/router'
 import publicController from '../api/PublicController'
 import contentController from '../api/ContentController'
 import userController from '../api/UserController'
+import commentController from '../api/CommentController'
 
 const router = new Router()
 
@@ -12,5 +13,6 @@ router.get('/tipsOrlinks', contentController.getTipsOrLinks)
 router.get('/topWeek', contentController.getTopWeek)
 router.get('/reset-email', userController.updateUserName)
 router.get('/content/detail', contentController.getPostDetail)
+router.get('/comments', commentController.getComments)
 
 export default router

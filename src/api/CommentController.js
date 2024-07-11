@@ -45,6 +45,36 @@ class CommentController {
       msg: '上传评论成功'
     }
   }
+
+  async updateComment (ctx, next) {
+    const { body } = ctx.request
+    const sid = body.sid
+    const code = body.code
+
+    const res = await checkCode(sid, code)
+    if (!res) {
+      ctx.bodty = {
+        code: 401,
+        msg: '图片验证码不正确'
+      }
+      return
+    }
+    const result = await CommentsModel.updateOne({ _id: body.cid }, {
+      $set: body
+    })
+    if (result) {
+      ctx.body = {
+        code: 200,
+        data: body,
+        msg: '编辑成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '编辑失败'
+      }
+    }
+  }
 }
 
 export default new CommentController()

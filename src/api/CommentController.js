@@ -9,7 +9,7 @@ class CommentController {
     const params = ctx.query
     const tid = params.tid
     const page = params.page ? params.page : 0
-    const pageSize = params.pageSize ? params.pageSize : 10
+    const pageSize = params.pageSize ? +params.pageSize : 10
 
     const result = await CommentsModel.getCommentsList(tid, page, pageSize)
     const total = await CommentsModel.queryCount(tid)

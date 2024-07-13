@@ -75,6 +75,25 @@ class CommentController {
       }
     }
   }
+
+  async setBest (ctx, next) {
+    const params = ctx.query
+    await PostModel.updateOne({
+      _id: params.tid
+    }, {
+      $set: { isEnd: '1' }
+    })
+    await CommentsModel.updateOne({
+      _id: params.cid
+    }, {
+      $set: { isBest: '1' }
+    })
+
+    ctx.body = {
+      code: 200,
+      msg: '采纳成功'
+    }
+  }
 }
 
 export default new CommentController()

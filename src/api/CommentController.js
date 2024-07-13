@@ -4,6 +4,20 @@ import PostModel from '../model/Post'
 
 import { checkCode, getJWTPayload } from '../common/utils'
 
+const canReply = async ctx => {
+  let res = false
+  const obj = await getJWTPayload(ctx.header.authorization)
+  if (typeof obj !== 'undefined' && obj._id !== '') {
+    const user = await UsersModel.findById(obj._id)
+    if (user.status !== '1') {
+      res = true
+    }
+  } else {
+    return res
+  }
+  return res
+}
+
 class CommentController {
   async getComments (ctx, next) {
     const params = ctx.query
@@ -23,6 +37,15 @@ class CommentController {
   }
 
   async addComment (ctx, next) {
+    const check = await canReply(ctx)
+    if (!check) {
+      ctx.body = {
+        code: 500,
+        msg: '当前用户已被禁言, 请联系管理员'
+      }
+      return
+    }
+
     const { body } = ctx.request
     const sid = body.sid
     const code = body.code
@@ -47,6 +70,15 @@ class CommentController {
   }
 
   async updateComment (ctx, next) {
+    const check = await canReply(ctx)
+    if (!check) {
+      ctx.body = {
+        code: 500,
+        msg: '当前用户已被禁言, 请联系管理员'
+      }
+      return
+    }
+
     const { body } = ctx.request
     const sid = body.sid
     const code = body.code
@@ -77,21 +109,56 @@ class CommentController {
   }
 
   async setBest (ctx, next) {
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (typeof obj === 'undefined' && obj._id === '') {
+      ctx.body = {
+        code: 401,
+        msg: '用户未登录或用户为授权'
+      }
+      return
+    }
     const params = ctx.query
-    await PostModel.updateOne({
-      _id: params.tid
-    }, {
-      $set: { isEnd: '1' }
-    })
-    await CommentsModel.updateOne({
-      _id: params.cid
-    }, {
-      $set: { isBest: '1' }
-    })
-
-    ctx.body = {
-      code: 200,
-      msg: '采纳成功'
+    const post = await PostModel.findOne({ _id: params.tid })
+    if (post.uid === obj._id && post.isEnd !== '1') {
+      const res = await PostModel.updateOne({
+        _id: params.tid
+      }, {
+        $set: { isEnd: '1' }
+      })
+      const res1 = await CommentsModel.updateOne({
+        _id: params.cid
+      }, {
+        $set: { isBest: '1' }
+      })
+      if (res && res1) {
+        const comment = await CommentsModel.findByCid(params.cid)
+        console.log(comment)
+        const result2 = await UsersModel.updateOne({ _id: comment.cuid },{
+          $inc: { favs: +post.fav }
+        })
+        console.log(result2)
+        if (result2) {
+          ctx.body = {
+            code: 200,
+            msg: '采纳评论成功, 积分发放成功'
+          }
+        } else {
+          ctx.body = {
+            code: 500,
+            msg: '积分发放失败'
+          }
+        }
+      } else {
+        ctx.body = {
+          code: 500,
+          msg: '采纳评论失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '帖子已结帖, 无法重复采纳'
+      }
     }
   }
 }

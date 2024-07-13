@@ -30,6 +30,9 @@ CommentsSchema.statics = {
   findByTid: function (id) {
     return this.findByTid({ tid: id })
   },
+  findByCid: function (id) {
+    return this.findOne({ _id: id })
+  },
   getCommentsList: function (id, page, pageSize) {
     return this.find({ tid: id }).populate({
       path: 'cuid',

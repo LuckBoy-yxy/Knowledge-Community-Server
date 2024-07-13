@@ -21,9 +21,9 @@ CommentsHandsSchema.post('save', function(error, doc, next) {
   }
 })
 
-CommentsHandsSchema.static = {
-  findByTid: function (id) {
-    return this.findByTid({ tid: id })
+CommentsHandsSchema.statics = {
+  findByCid: function (id) {
+    return this.find({ cid: id })
   }
 }
 

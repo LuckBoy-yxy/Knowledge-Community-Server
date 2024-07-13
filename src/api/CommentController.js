@@ -1,4 +1,5 @@
 import CommentsModel from '../model/Comments'
+import CommentsHandsModel from '../model/CommentsHands'
 import UsersModel from '../model/User'
 import PostModel from '../model/Post'
 
@@ -25,7 +26,36 @@ class CommentController {
     const page = params.page ? params.page : 0
     const pageSize = params.pageSize ? +params.pageSize : 10
 
-    const result = await CommentsModel.getCommentsList(tid, page, pageSize)
+    let result = await CommentsModel.getCommentsList(tid, page, pageSize)
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (typeof obj !== 'undefined' && obj._id !== '') {
+      result = result.map(comment => comment.toJSON())
+      for (let i = 0; i < result.length; i++) {
+        result[i].handed = '0'
+        const hand = await CommentsHandsModel.findOne({
+          uid: obj._id,
+          cid: result[i]._id
+        })
+        if (hand && hand._id) {
+          if (hand.uid === obj._id) {
+            result[i].handed = '1'
+          }
+        }
+      }
+      // result.forEach(async comment => {
+      //   comment.handed = '0'
+      //   const hand = await CommentsHandsModel.findOne({
+      //     cid: comment._id,
+      //     uid: obj._id
+      //   })
+      //   if (hand && hand.cid) {
+      //     if (hand.uid === obj._id) {
+      //       comment.handed = '1'
+      //     }
+      //   }
+      // })
+    }
+
     const total = await CommentsModel.queryCount(tid)
 
     ctx.body = {
@@ -132,11 +162,9 @@ class CommentController {
       })
       if (res && res1) {
         const comment = await CommentsModel.findByCid(params.cid)
-        console.log(comment)
         const result2 = await UsersModel.updateOne({ _id: comment.cuid },{
           $inc: { favs: +post.fav }
         })
-        console.log(result2)
         if (result2) {
           ctx.body = {
             code: 200,
@@ -158,6 +186,50 @@ class CommentController {
       ctx.body = {
         code: 500,
         msg: '帖子已结帖, 无法重复采纳'
+      }
+    }
+  }
+
+  async setHands (ctx, next) {
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (typeof obj === 'undefined' && obj._id === '') {
+      ctx.body = {
+        code: 401,
+        msg: '用户未登录或用户未授权'
+      }
+      return
+    }
+
+    const params = ctx.query
+    const tmp = await CommentsHandsModel.find({
+      cid: params.cid,
+      uid: obj._id
+    })
+    if (tmp.length) {
+      ctx.body = {
+        code: 500,
+        msg: '请勿重复点赞'
+      }
+      return
+    }
+
+    const newHand = new CommentsHandsModel({
+      cid: params.cid,
+      uid: obj._id
+    })
+    const res = await newHand.save()
+    if (res) {
+      await CommentsModel.updateOne({ _id: params.cid }, {
+        $inc: { hands: 1 }
+      })
+      ctx.body = {
+        code: 200,
+        msg: '点赞成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '点赞失败'
       }
     }
   }

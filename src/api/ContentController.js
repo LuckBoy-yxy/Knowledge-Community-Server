@@ -178,6 +178,48 @@ class ContentController {
       }
     }
   }
+
+  async updatePost (ctx, next) {
+    const { body } = ctx.request
+    const code = body.code
+    const sid = body.sid
+    const flag = await checkCode(sid, code)
+    if (flag) {
+      const obj = await getJWTPayload(ctx.header.authorization)
+      const post = await PostModel.findOne({ _id: body.tid })
+      if (post.uid === obj._id) {
+        if (post.isEnd !== '1') {
+          const res = await PostModel.updateOne({ _id: body.tid }, body)
+          if (res) {
+            ctx.body = {
+              code: 200,
+              msg: '帖子编辑成功'
+            }
+          } else {
+            ctx.body = {
+              code: 500,
+              msg: '帖子编辑成功'
+            }
+          }
+        } else {
+          ctx.body = {
+            code: 500,
+            msg: '帖子已结帖, 无法再编辑'
+          }
+        }
+      } else {
+        ctx.body = {
+          code: 401,
+          msg: '没有编辑权限'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '图片验证码错误'
+      }
+    }
+  }
 }
 
 export default new ContentController()

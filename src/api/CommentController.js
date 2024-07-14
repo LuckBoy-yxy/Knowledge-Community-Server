@@ -27,33 +27,23 @@ class CommentController {
     const pageSize = params.pageSize ? +params.pageSize : 10
 
     let result = await CommentsModel.getCommentsList(tid, page, pageSize)
-    const obj = await getJWTPayload(ctx.header.authorization)
-    if (typeof obj !== 'undefined' && obj._id !== '') {
-      result = result.map(comment => comment.toJSON())
-      for (let i = 0; i < result.length; i++) {
-        result[i].handed = '0'
-        const hand = await CommentsHandsModel.findOne({
-          uid: obj._id,
-          cid: result[i]._id
-        })
-        if (hand && hand._id) {
-          if (hand.uid === obj._id) {
-            result[i].handed = '1'
+    if (ctx.header.authorization) {
+      const obj = await getJWTPayload(ctx.header.authorization)
+      if (typeof obj !== 'undefined' && obj._id !== '') {
+        result = result.map(comment => comment.toJSON())
+        for (let i = 0; i < result.length; i++) {
+          result[i].handed = '0'
+          const hand = await CommentsHandsModel.findOne({
+            uid: obj._id,
+            cid: result[i]._id
+          })
+          if (hand && hand._id) {
+            if (hand.uid === obj._id) {
+              result[i].handed = '1'
+            }
           }
         }
       }
-      // result.forEach(async comment => {
-      //   comment.handed = '0'
-      //   const hand = await CommentsHandsModel.findOne({
-      //     cid: comment._id,
-      //     uid: obj._id
-      //   })
-      //   if (hand && hand.cid) {
-      //     if (hand.uid === obj._id) {
-      //       comment.handed = '1'
-      //     }
-      //   }
-      // })
     }
 
     const total = await CommentsModel.queryCount(tid)

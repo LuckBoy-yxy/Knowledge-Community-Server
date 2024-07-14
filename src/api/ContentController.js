@@ -160,12 +160,22 @@ class ContentController {
     }
 
     const post = await PostModel.findByTid(params.tid)
-    // const post = await PostModel.findById({ _id: params.tid })
-    const result = rename(post.toJSON(), 'uid', 'user')
-    ctx.body = {
-      code: 200,
-      data: result,
-      msg: '请求成功'
+    const res = await PostModel.updateOne({ _id: params.tid }, {
+      $inc: { reads: 1 }
+    })
+    if (post._id && res) {
+      // const post = await PostModel.findById({ _id: params.tid })
+      const result = rename(post.toJSON(), 'uid', 'user')
+      ctx.body = {
+        code: 200,
+        data: result,
+        msg: '请求成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '请求失败'
+      }
     }
   }
 }

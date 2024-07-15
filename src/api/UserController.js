@@ -242,6 +242,35 @@ class UserController {
       }
     }
   }
+
+  async getCollectByUid (ctx, next) {
+    const params = ctx.query
+    const page = +params.page ? +params.page - 1 : 0
+    const pageSize = +params.pageSize ? +params.pageSize : 10
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+    }
+
+    const collectList = await UserCollect.getListByUid(obj._id, page, pageSize)
+    const total = await UserCollect.countByUid(obj._id)
+    if (collectList.length) {
+      ctx.body = {
+        code: 200,
+        data: collectList,
+        total,
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败'
+      }
+    }
+  }
 }
 
 export default new UserController()

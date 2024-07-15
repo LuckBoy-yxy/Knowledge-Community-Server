@@ -271,6 +271,49 @@ class ContentController {
       }
     }
   }
+
+  async delPostByUid (ctx, next) {
+    const params = ctx.query
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+      return
+    }
+
+    const post = await PostModel.findOne({
+      _id: params.tid,
+      uid: obj._id
+    })
+    if (post.uid === obj._id) {
+      if (post.isEnd === '0') {
+        const result = await PostModel.deleteOne({ _id: params.tid })
+        if (result) {
+          ctx.body = {
+            code: 200,
+            msg: '删除成功'
+          }
+        } else {
+          ctx.body = {
+            code: 500,
+            msg: '删除失败'
+          }
+        }
+      } else {
+        ctx.body = {
+          code: 500,
+          msg: '帖子已结帖, 无法删除'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '无权限删除'
+      }
+    }
+  }
 }
 
 export default new ContentController()

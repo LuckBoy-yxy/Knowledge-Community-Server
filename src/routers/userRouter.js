@@ -11,5 +11,6 @@ router.post('/basic', userController.updateUserInfo)
 router.post('/change-password', userController.changePasswd)
 router.get('/set-collect', userController.setCollect)
 router.get('/post', contentController.getPostByUid)
+router.get('/del-post', contentController.delPostByUid)
 
 export default router

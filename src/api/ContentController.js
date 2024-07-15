@@ -290,6 +290,10 @@ class ContentController {
     if (post.uid === obj._id) {
       if (post.isEnd === '0') {
         const result = await PostModel.deleteOne({ _id: params.tid })
+        const collect = await UserCollect.findOne({ tid: params.tid })
+        if (collect?.tid) {
+          await UserCollect.deleteOne({ tid: params.tid })
+        }
         if (result) {
           ctx.body = {
             code: 200,

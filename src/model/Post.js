@@ -58,6 +58,15 @@ PostSchema.statics = {
         select: 'name pic isVip _id'
       }
     )
+  },
+  getListByUid (id, page, pageSize) {
+    return this.find({ uid: id })
+      .skip(page * pageSize)
+      .limit(pageSize)
+      .sort({ created: -1 })
+  },
+  countByUid (id) {
+    return this.find({ uid: id }).countDocuments()
   }
 }
 

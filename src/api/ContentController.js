@@ -174,7 +174,7 @@ class ContentController {
           uid: obj._id,
           tid: params.tid
         })
-        if (collect.uid) {
+        if (collect?.tid) {
           isFav = 1
         }
       }
@@ -236,6 +236,38 @@ class ContentController {
       ctx.body = {
         code: 500,
         msg: '图片验证码错误'
+      }
+    }
+  }
+
+  async getPostByUid (ctx, next) {
+    const params = ctx.query
+    const page = params.page ? +params.page - 1 : 0
+    const pageSize = +params.pageSize ? +params.pageSize : 10
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+      return
+    }
+
+    const list = await PostModel.getListByUid(obj._id, page, pageSize)
+    const total = await PostModel.countByUid(obj._id)
+    if (list.length) {
+      ctx.body = {
+        code: 200,
+        data: {
+          list,
+          total
+        },
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败'
       }
     }
   }

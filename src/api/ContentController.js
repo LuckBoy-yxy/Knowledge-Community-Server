@@ -1,5 +1,6 @@
 import PostModel from '../model/Post'
 import LinkModel from '../model/Link'
+import UserCollect from '../model/UserCollect'
 import fs from 'fs'
 import moment from 'moment'
 import uuid from 'uuid/v4'
@@ -159,13 +160,31 @@ class ContentController {
       return
     }
 
-    const post = await PostModel.findByTid(params.tid)
     const res = await PostModel.updateOne({ _id: params.tid }, {
       $inc: { reads: 1 }
     })
+    const post = await PostModel.findByTid(params.tid)
+
+    let isFav = 0
+    const authorization = ctx.header.authorization
+    if (typeof authorization !== 'undefined' && authorization !== '') {
+      const obj = await getJWTPayload(authorization)
+      if (obj) {
+        const collect = await UserCollect.findOne({
+          uid: obj._id,
+          tid: params.tid
+        })
+        if (collect.uid) {
+          isFav = 1
+        }
+      }
+    }
+    const newPost = post.toJSON()
+    newPost.isFav = isFav
+
     if (post._id && res) {
       // const post = await PostModel.findById({ _id: params.tid })
-      const result = rename(post.toJSON(), 'uid', 'user')
+      const result = rename(newPost, 'uid', 'user')
       ctx.body = {
         code: 200,
         data: result,

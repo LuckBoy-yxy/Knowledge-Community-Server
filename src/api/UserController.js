@@ -1,5 +1,6 @@
 import SignRecordModel from '../model/SignRecord'
 import UsersModel from '../model/User'
+import UserCollect from '../model/UserCollect'
 import { getJWTPayload } from '../common/utils'
 import moment from 'moment'
 import send from '../config/MailConfig'
@@ -199,6 +200,45 @@ class UserController {
       ctx.body = {
         code: 500,
         msg: '旧密码不匹配'
+      }
+    }
+  }
+
+  async setCollect (ctx, next) {
+    const params = ctx.query
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+      return
+    }
+
+    // const isFav = params.isFav
+    const isFav = +params.isFav
+    if (isFav) {
+      await UserCollect.deleteOne({
+        uid: obj._id,
+        tid: params.tid
+      })
+      ctx.body = {
+        code: 200,
+        msg: '取消收藏成功'
+      }
+    } else {
+      const newCollect = new UserCollect({
+        uid: obj._id,
+        tid: params.tid,
+        title: params.title
+      })
+      const result = await newCollect.save()
+      if (result.uid) {
+        ctx.body = {
+          code: 200,
+          data: result,
+          msg: '收藏成功'
+        }
       }
     }
   }

@@ -271,6 +271,43 @@ class UserController {
       }
     }
   }
+
+  async getBaseUserInfo (ctx, next) {
+    const params = ctx.query
+    if (!params.uid) {
+      ctx.body = {
+        code: 401,
+        msg: '缺少必要参数 uid'
+      }
+      return
+    }
+
+    let info = await UsersModel.findById(params.uid)
+    info = info.toJSON()
+    const date = moment().format('YYYY-MM-DD')
+    const result = await SignRecordModel.findOne({
+      uid: params.uid,
+      created: { $gte: date + ' 00:00:00' }
+    })
+    if (result?.uid) {
+      info.isSign = true
+    } else {
+      info.isSign = false
+    }
+
+    if (info?._id) {
+      ctx.body = {
+        code: 200,
+        data: info,
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败'
+      }
+    }
+  }
 }
 
 export default new UserController()

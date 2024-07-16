@@ -318,6 +318,37 @@ class ContentController {
       }
     }
   }
+
+  async getPublicPostByUid (ctx, next) {
+    const params = ctx.query
+    const page = params.page ? +params.page - 1 : 0
+    const pageSize = +params.pageSize ? +params.pageSize : 10
+    const uid = params.uid
+    if (!uid) {
+      ctx.body = {
+        code: 401,
+        msg: '参数错误, 缺少 uid'
+      }
+      return
+    }
+
+    const list = await PostModel.getListByUid(uid, page, pageSize)
+    const total = await PostModel.countByUid(uid)
+    if (list.length) {
+      ctx.body = {
+        code: 200,
+        data: list,
+        total,
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败'
+      }
+    }
+  }
+
 }
 
 export default new ContentController()

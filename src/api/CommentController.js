@@ -234,6 +234,33 @@ class CommentController {
       }
     }
   }
+
+  async getPublicCommentList (ctx, next) {
+    const params = ctx.query
+    const page = +params.page ? +params.page - 1 : 0
+    const pageSize = +params.pageSize ? +params.pageSize : 10
+    const uid = params.uid
+    if (!uid) {
+      ctx.body = {
+        code: 401,
+        msg: '参数错误, 缺少 uid'
+      }
+    }
+
+    const commentList = await CommentsModel.getCommentPublic(uid, page, pageSize)
+    if (commentList.length) {
+      ctx.body = {
+        code: 200,
+        data: commentList,
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败'
+      }
+    }
+  }
 }
 
 export default new CommentController()

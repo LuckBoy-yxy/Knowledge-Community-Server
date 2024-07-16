@@ -38,7 +38,7 @@ PostSchema.statics = {
       .limit(pageSize)
       .populate({
         path: 'uid',
-        select: 'name isVip pic'
+        select: 'name isVip pic _id'
       })
   },
   getTopWeek () {

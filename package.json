@@ -38,7 +38,8 @@
     "redis": "^2.8.0",
     "svg-captcha": "^1.4.0",
     "uuid": "^3.3.3",
-    "webpack-merge": "^5.10.0"
+    "webpack-merge": "^5.10.0",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",

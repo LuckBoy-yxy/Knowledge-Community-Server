@@ -11,8 +11,11 @@ import compress from 'koa-compress'
 import JWT from 'koa-jwt'
 import config from './config/index'
 import errorHandle from './common/errorHandle'
+import WebSocketServer from './config/WebSocket'
 
 const app = new Koa()
+const ws = new WebSocketServer()
+ws.init()
 
 const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 

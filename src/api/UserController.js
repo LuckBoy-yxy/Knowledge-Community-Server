@@ -1,6 +1,7 @@
 import SignRecordModel from '../model/SignRecord'
 import UsersModel from '../model/User'
 import UserCollect from '../model/UserCollect'
+import CommentsModel from '../model/Comments'
 import { getJWTPayload } from '../common/utils'
 import moment from 'moment'
 import send from '../config/MailConfig'
@@ -305,6 +306,42 @@ class UserController {
       ctx.body = {
         code: 500,
         msg: '获取失败'
+      }
+    }
+  }
+
+  async getMsg (ctx, next) {
+    const params = ctx.query
+    const page = +params.page ? +params.page - 1 : 0
+    const pageSize = +params.pageSize ? +params.pageSize : 10
+
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+      return
+    }
+
+    const commentList = await CommentsModel.getMsgList({
+      id: obj._id,
+      page,
+      pageSize
+    })
+    if (commentList.length) {
+      const total = await CommentsModel.msgCount(obj._id)
+      ctx.body = {
+        code: 200,
+        data: commentList,
+        total,
+        msg: '获取成功'
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        data: [],
+        msg: '暂无任何消息'
       }
     }
   }

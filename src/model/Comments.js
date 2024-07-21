@@ -4,6 +4,7 @@ import moment from 'moment'
 const Schema = mongoose.Schema
 const CommentsSchema = new Schema({
   tid: { type: String, ref: 'post'},
+  uid: { type: String, ref: 'users' },
   cuid: { type: String, ref: 'users' },
   content: { type: String },
   created: { type: Date },
@@ -56,6 +57,33 @@ CommentsSchema.statics = {
     }).skip(page * pageSize).limit(pageSize).sort({
       created: -1
     })
+  },
+  getMsgList ({ id, page, pageSize }) {
+    return this.find({
+        uid: id,
+        cuid: { $ne: id },
+        isRead: { $eq: '0' },
+        status: { $eq: '1' }
+      }).populate({
+        path: 'tid',
+        select: '_id title'
+      }).populate({
+        path: 'cuid',
+        select: '_id name',
+      }).populate({
+        path: 'uid',
+        select: '_id name'
+      }).skip(page * pageSize).limit(pageSize).sort({
+        created: -1
+      })
+  },
+  msgCount (id) {
+    return this.find({
+      uid: id,
+      cuid: { $ne: id },
+      isRead: { $eq: '0' },
+      status: { $eq: '1' }
+    }).countDocuments()
   }
 }
 

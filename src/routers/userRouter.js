@@ -13,5 +13,6 @@ router.get('/set-collect', userController.setCollect)
 router.get('/post', contentController.getPostByUid)
 router.get('/del-post', contentController.delPostByUid)
 router.get('/collect', userController.getCollectByUid)
+router.get('/get-msg', userController.getMsg)
 
 export default router

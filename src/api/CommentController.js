@@ -81,6 +81,8 @@ class CommentController {
     const newComment = new CommentsModel(body)
     const userId = await getJWTPayload(ctx.header.authorization)
     newComment.cuid = userId._id
+    const post = await PostModel.findOne({ _id: body.tid })
+    newComment.uid = post.uid
     const comment = await newComment.save()
     const result = await PostModel.updateOne({ _id: body.tid }, {
       $inc: { answer: 1 }

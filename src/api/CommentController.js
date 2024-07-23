@@ -84,6 +84,13 @@ class CommentController {
     const post = await PostModel.findOne({ _id: body.tid })
     newComment.uid = post.uid
     const comment = await newComment.save()
+
+    const num = await CommentsModel.msgCount(post.uid)
+    global.ws.send(post.uid, JSON.stringify({
+      event: 'message',
+      message: num
+    }))
+
     const result = await PostModel.updateOne({ _id: body.tid }, {
       $inc: { answer: 1 }
     })

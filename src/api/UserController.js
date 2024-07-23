@@ -345,6 +345,40 @@ class UserController {
       }
     }
   }
+
+  async setMsg (ctx, next) {
+    const params = ctx.query
+    const obj = await getJWTPayload(ctx.header.authorization)
+    if (!obj) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录'
+      }
+      return
+    }
+
+    if (params.id) {
+      const result = await CommentsModel.updateOne({
+        _id: params.id
+      }, { isRead: '1' })
+      if (result) {
+        ctx.body = {
+          code: 200,
+          msg: '删除成功'
+        }
+      }
+    } else {
+      const result = await CommentsModel.updateMany({
+        uid: obj._id
+      }, { isRead: '1' })
+      if (result) {
+        ctx.body = {
+          code: 200,
+          msg: '清除成功'
+        }
+      }
+    }
+  }
 }
 
 export default new UserController()

@@ -6,12 +6,12 @@ class WebSocketServer {
   constructor (config = {}) {
     const defaultConfig = {
       port: 3012,
-      timeInterval: 30 * 1000,
+      timeInterval: 1000,
       isAuth: true
     }
     const finalConfig = { ...defaultConfig, ...config }
     this.wss = {}
-    // this.interval = finalConfig.timeInterval
+    this.timeInterval = finalConfig.timeInterval
     this.interval = null
     this.isAuth = finalConfig.isAuth
     this.port = finalConfig.port
@@ -24,12 +24,12 @@ class WebSocketServer {
       ...this.options
     })
 
-    // this.heartbeat()
     this.wss.on('connection', ws => {
       ws.isAlive = true
       ws.on('message', msg => this.onMessage(ws, msg))
       ws.on('close', () => this.onClose(ws))
     })
+    this.heartbeat()
   }
 
   async onMessage (ws, msg) {
@@ -55,6 +55,7 @@ class WebSocketServer {
         }
       },
       heartbeat: () => {
+        console.log(msgObj)
         if (msgObj.messgae === 'pong') {
           ws.isAlive = true
         }

@@ -6,7 +6,7 @@ class WebSocketServer {
   constructor (config = {}) {
     const defaultConfig = {
       port: 3012,
-      timeInterval: 1000,
+      timeInterval: 30 * 1000,
       isAuth: true
     }
     const finalConfig = { ...defaultConfig, ...config }
@@ -55,7 +55,6 @@ class WebSocketServer {
         }
       },
       heartbeat: () => {
-        console.log(msgObj)
         if (msgObj.message === 'pong') {
           ws.isAlive = true
         }
@@ -99,7 +98,6 @@ class WebSocketServer {
     clearInterval(this.interval)
     this.interval = setInterval(() => {
       this.wss.clients.forEach(ws => {
-        console.log('server', ws.isAlive)
         if (!ws.isAlive) {
           return ws.terminate()
         }

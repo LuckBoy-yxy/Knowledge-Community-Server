@@ -36,7 +36,8 @@ class LoginController {
         checkUserPassword = true
       }
       if (checkUserPassword) {
-        const arr = ['password', 'username', 'roles']
+        // const arr = ['password', 'username', 'roles']
+        const arr = ['password', 'username']
         const userObj = user.toJSON()
         arr.forEach(item => {
           delete userObj[item]

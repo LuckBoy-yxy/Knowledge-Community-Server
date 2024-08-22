@@ -38,10 +38,12 @@ class ContentController {
     }
 
     const result = await PostModel.getList(options, sort, page, pageSize)
+    const total = await PostModel.count(options)
 
     ctx.body = {
       code: 200,
       data: result,
+      total,
       msg: '获取文章列表成功'
     }
   }

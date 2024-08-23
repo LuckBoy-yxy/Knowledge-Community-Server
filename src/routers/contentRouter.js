@@ -7,5 +7,6 @@ router.prefix('/content')
 router.post('/upload', contentController.uploadImg)
 router.post('/add', contentController.addPost)
 router.post('/update', contentController.updatePost)
+router.get('/delete', contentController.deletePost)
 
 export default router

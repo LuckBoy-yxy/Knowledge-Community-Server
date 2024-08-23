@@ -321,6 +321,24 @@ class ContentController {
     }
   }
 
+  async deletePost (ctx, next) {
+    const params = ctx.query
+    const res = await PostModel.deleteOne({
+      _id: params.id
+    })
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '删除成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '删除失败'
+      }
+    }
+  }
+
   async getPublicPostByUid (ctx, next) {
     const params = ctx.query
     const page = params.page ? +params.page - 1 : 0
@@ -350,7 +368,6 @@ class ContentController {
       }
     }
   }
-
 }
 
 export default new ContentController()

@@ -242,6 +242,28 @@ class ContentController {
     }
   }
 
+  async updatePostByTid (ctx, next) {
+    const { body } = ctx.request
+    // const id = ctx.params.id
+    // const result = await PostModel.updateOne({
+    //   _id: id
+    // }, body)
+    const result = await PostModel.updateOne({
+      _id: body._id
+    }, body)
+    if (result) {
+      ctx.body = {
+        code: 200,
+        msg: '帖子编辑成功'
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '帖子编辑失败'
+      }
+    }
+  }
+
   async getPostByUid (ctx, next) {
     const params = ctx.query
     const page = params.page ? +params.page - 1 : 0

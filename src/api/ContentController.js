@@ -1,6 +1,7 @@
 import PostModel from '../model/Post'
 import LinkModel from '../model/Link'
 import UserCollect from '../model/UserCollect'
+import PostTagsModel from '../model/PostTags'
 import fs from 'fs'
 import moment from 'moment'
 import uuid from 'uuid/v4'
@@ -387,6 +388,74 @@ class ContentController {
       ctx.body = {
         code: 500,
         msg: '获取失败'
+      }
+    }
+  }
+
+  async addTag (ctx, next) {
+    const { body } = ctx.request
+    const tag = new PostTagsModel(body)
+    const res = await tag.save()
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '标签添加成功'
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '标签添加失败'
+      }
+    }
+  }
+
+  async getTags (ctx, next) {
+    const params = ctx.query
+    const page = params.page ? +params.page - 1 : 0
+    const pageSize = params.pageSize ? +params.pageSize : 10
+    const res = await PostTagsModel.getList({}, page, pageSize)
+    const total = await PostTagsModel.countList({})
+    ctx.body = {
+      code: 200,
+      data: res,
+      total,
+      msg: '标签查询成功'
+    }
+  }
+
+  async removeTag (ctx, next) {
+    const id = ctx.params.id
+    const res = await PostTagsModel.deleteOne({
+      _id: id
+    })
+    if (res.acknowledged) {
+      ctx.body = {
+        code: 200,
+        msg: '标签删除成功'
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        msg: '标签删除失败'
+      }
+    }
+  }
+
+  async updateTag (ctx, next) {
+    const { body } = ctx.request
+    const res =  await PostTagsModel.updateOne(
+      { _id: body._id },
+      body
+    )
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '标签更新成功'
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '标签更新失败'
       }
     }
   }

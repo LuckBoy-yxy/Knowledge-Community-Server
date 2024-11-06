@@ -4,6 +4,7 @@ import loginController from './loginRouter'
 import userRouter from './userRouter'
 import contentRouter from './contentRouter'
 import commentsRouter from './commentsRouter'
+import adminRouter from './adminRouter'
 
 // const moduleFiles = require.context('./modules', true, /\.js$/)
 // const modules = moduleFiles.keys().reduce((item, path) => {
@@ -19,7 +20,8 @@ const router = combineRouters(
   loginController,
   userRouter,
   contentRouter,
-  commentsRouter
+  commentsRouter,
+  adminRouter
 )
 
 export default router

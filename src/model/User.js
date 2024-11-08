@@ -36,6 +36,7 @@ userSchema.post('save', function (error, doc, next) {
     next(error)
   }
 })
+
 userSchema.statics = {
   findById (id) {
     return this.findOne({ '_id': id }, {
@@ -43,6 +44,15 @@ userSchema.statics = {
       username: 0,
       mobile: 0
     })
+  },
+  getList: function (options, page, pageSize, sort) {
+    return this.find({...options}, { password: 0, mobile: 0 })
+      .skip(page * pageSize)
+      .limit(pageSize)
+      .sort({ [sort]: -1 })
+  },
+  countList: function (options = {}) {
+    return this.find(options).countDocuments()
   }
 }
 

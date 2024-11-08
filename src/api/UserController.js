@@ -381,6 +381,100 @@ class UserController {
       }
     }
   }
+
+  async getUsers (ctx, next) {
+    const params = ctx.query
+    const page = params.page ? +params.page - 1 : 0
+    const pageSize = params.pageSize ? +params.pageSize : 10
+    const sort = params.sort || 'created'
+    const res = await UsersModel.getList({}, page, pageSize, sort)
+    const total = await UsersModel.countList({})
+    ctx.body = {
+      code: 200,
+      data: res,
+      total,
+      msg: '用户列表获取成功'
+    }
+  }
+
+  async deleteUserById (ctx, next) {
+    const id = ctx.params.id
+    const user = await UsersModel.findOne({_id: id})
+    if (user) {
+      const res = await UsersModel.deleteOne({_id: user._id})
+      console.log(res)
+      if (res) {
+        ctx.body = {
+          code: 200,
+          msg: '用户删除成功'
+        }
+      } else {
+        ctx.body = {
+          code: 200,
+          msg: '用户删除失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '用户不存在或 id 信息错误'
+      }
+    }
+  }
+
+  async updateUserById (ctx, next) {
+    const { body } = ctx.request
+    const user = await UsersModel.findOne({
+      _id: body._id
+    })
+    if (!user) {
+      ctx.body = {
+        code: 500,
+        msg: '用户不存在'
+      }
+      return
+    }
+
+    // if (body.username !== user.username) {
+    //   const checkUserName = await UsersModel.findOne({
+    //     username: body.username
+    //   })
+    //   if (checkUserName) {
+    //     ctx.body = {
+    //       code: 401,
+    //       msg: '更新的邮箱已存在'
+    //     }
+    //   }
+    //   return
+    // }
+
+    if (body.password) {
+      // body.password = await bcrypt.hash(body.password, 5)
+    }
+
+    const res = await UsersModel.updateOne({
+      _id: body._id
+    }, body)
+    ctx.body = {
+      code: 200,
+      msg: '更新成功'
+    }
+  }
+
+  async checkUserName (ctx, next) {
+    const params = ctx.query
+    const res = await UsersModel.findOne({
+      username: params.username
+    })
+    let data = 1
+    if (res) {
+      data = 0
+    }
+    ctx.body = {
+      code: 200,
+      data
+    }
+  }
 }
 
 export default new UserController()

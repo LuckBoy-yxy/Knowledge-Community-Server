@@ -398,27 +398,44 @@ class UserController {
   }
 
   async deleteUserById (ctx, next) {
-    const id = ctx.params.id
-    const user = await UsersModel.findOne({_id: id})
-    if (user) {
-      const res = await UsersModel.deleteOne({_id: user._id})
-      if (res) {
-        ctx.body = {
-          code: 200,
-          msg: '用户删除成功'
-        }
-      } else {
-        ctx.body = {
-          code: 200,
-          msg: '用户删除失败'
-        }
+    // const id = ctx.params.id
+    const { body } = ctx.request
+    const res = await UsersModel.deleteMany({
+      _id: { $in: body.ids }
+    })
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '删除成功',
+        data: res
       }
     } else {
       ctx.body = {
-        code: 500,
-        msg: '用户不存在或 id 信息错误'
+        code: 401,
+        msg: '删除失败',
+        data: res
       }
     }
+    // const user = await UsersModel.findOne({_id: id})
+    // if (user) {
+    //   const res = await UsersModel.deleteOne({_id: user._id})
+    //   if (res) {
+    //     ctx.body = {
+    //       code: 200,
+    //       msg: '用户删除成功'
+    //     }
+    //   } else {
+    //     ctx.body = {
+    //       code: 200,
+    //       msg: '用户删除失败'
+    //     }
+    //   }
+    // } else {
+    //   ctx.body = {
+    //     code: 500,
+    //     msg: '用户不存在或 id 信息错误'
+    //   }
+    // }
   }
 
   async updateUserById (ctx, next) {

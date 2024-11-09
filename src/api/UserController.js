@@ -513,6 +513,25 @@ class UserController {
       }
     }
   }
+
+  async updateUserBatch (ctx, next) {
+    const { body } = ctx.request
+    const res = await UsersModel.updateMany({
+      _id: { $in: body.ids }
+    }, { $set: { ...body.formData }})
+
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '批量设置成功'
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '批量设置失败'
+      }
+    }
+  }
 }
 
 export default new UserController()

@@ -487,7 +487,7 @@ class UserController {
       ctx.body = {
         code: 200,
         msg: '添加用户成功',
-        data: res
+        data: userObj
       }
     } else {
       ctx.body = {

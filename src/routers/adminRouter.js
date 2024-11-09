@@ -13,5 +13,6 @@ router.get('/users', userController.getUsers)
 router.post('/update-user', userController.updateUserById)
 router.get('/delete-user/:id', userController.deleteUserById)
 router.get('/check-username', userController.checkUserName)
+router.post('/add-user', userController.addUser)
 
 export default router

@@ -402,7 +402,6 @@ class UserController {
     const user = await UsersModel.findOne({_id: id})
     if (user) {
       const res = await UsersModel.deleteOne({_id: user._id})
-      console.log(res)
       if (res) {
         ctx.body = {
           code: 200,
@@ -473,6 +472,28 @@ class UserController {
     ctx.body = {
       code: 200,
       data
+    }
+  }
+
+  async addUser (ctx, next) {
+    const { body } = ctx.request
+    // body.password = await bcrypt.hash(body.password, 5)
+    const user = new UsersModel(body)
+    let res = await user.save()
+    const userObj = res.toJSON()
+    const arr = ['password']
+    arr.forEach(item => (delete userObj[item]))
+    if (res) {
+      ctx.body = {
+        code: 200,
+        msg: '添加用户成功',
+        data: res
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: '添加用户失败'
+      }
     }
   }
 }

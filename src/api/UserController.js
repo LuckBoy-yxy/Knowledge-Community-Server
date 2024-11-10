@@ -9,6 +9,7 @@ import uuid from 'uuid/v4'
 import jwt from 'jsonwebtoken'
 import { setValue, getValue } from '../config/RedisConfig'
 import config from '../config'
+import qs from 'qs'
 
 class UserController {
   async userSign (ctx, next) {
@@ -383,11 +384,13 @@ class UserController {
   }
 
   async getUsers (ctx, next) {
-    const params = ctx.query
+    let params = ctx.query
+    params = qs.parse(params)
     const page = params.page ? +params.page - 1 : 0
     const pageSize = params.pageSize ? +params.pageSize : 10
     const sort = params.sort || 'created'
-    const res = await UsersModel.getList({}, page, pageSize, sort)
+    const option = params.option || {}
+    const res = await UsersModel.getList(option, page, pageSize, sort)
     const total = await UsersModel.countList({})
     ctx.body = {
       code: 200,

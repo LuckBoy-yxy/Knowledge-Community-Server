@@ -46,7 +46,26 @@ userSchema.statics = {
     })
   },
   getList: function (options, page, pageSize, sort) {
-    return this.find({...options}, { password: 0, mobile: 0 })
+    let query = {}
+    if (typeof options.search !== 'undefined') {
+      if (typeof options.search === 'string' && options.search.trim() !== '') {
+        if (['name', 'username'].includes(options.item)) {
+          query[options.item] = { $regex: new RegExp(options.search) }
+        } else {
+          query[options.item] = options.search
+        }
+      }
+      if (options.item === 'created') {
+        const start = options.search[0]
+        const end = options.search[1]
+        query = { created: { $gte: new Date(start) ,$lt: new Date(end) } }
+      }
+      if (options.item === 'roles') {
+        query = { roles: { $in: options.search } }
+      }
+    }
+    // return this.find({...options}, { password: 0, mobile: 0 })
+    return this.find(query, { password: 0, mobile: 0 })
       .skip(page * pageSize)
       .limit(pageSize)
       .sort({ [sort]: -1 })

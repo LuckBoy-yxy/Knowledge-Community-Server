@@ -20,5 +20,9 @@ router.post('/add-menu', adminController.addMenu)
 router.post('/update-menu', adminController.updateMenu)
 router.post('/delete-menu', adminController.deleteMenu)
 router.get('/get-menu', adminController.getMenu)
+router.post('/add-role', adminController.addRole)
+router.post('/delete-role', adminController.deleteRole)
+router.post('/update-role', adminController.updateRole)
+router.get('/get-roles', adminController.getRoles)
 
 export default router

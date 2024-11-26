@@ -1,4 +1,5 @@
 import MenuModel from '../model/Menus'
+import RolesModel from '../model/Roles'
 
 class AdminController {
   async getMenu (ctx) {
@@ -60,6 +61,43 @@ class AdminController {
         code: 500,
         msg: '菜单删除失败'
       }
+    }
+  }
+
+  async getRoles (ctx) {
+    const result = await RolesModel.find({})
+    ctx.body = {
+      code: 200,
+      data: result
+    }
+  }
+
+  async addRole (ctx) {
+    const { body } = ctx.request
+    const role = new RolesModel(body)
+    const result = await role.save()
+    ctx.body = {
+      code: 200,
+      data: result
+    }
+  }
+
+  async updateRole (ctx) {
+    const { body } = ctx.request
+    const data = { ...body }
+    const result = await RolesModel.updateOne({ _id: body._id }, { ...data })
+    ctx.body = {
+      code: 200,
+      data: result
+    }
+  }
+
+  async deleteRole (ctx) {
+    const { body } = ctx.request
+    const result = await RolesModel.deleteOne({ _id: body._id })
+    ctx.body = {
+      code: 200,
+      data: result
     }
   }
 }

@@ -1,5 +1,6 @@
 import MenuModel from '../model/Menus'
 import RolesModel from '../model/Roles'
+import UsersModel from '../model/User'
 
 class AdminController {
   async getMenu (ctx) {
@@ -106,6 +107,23 @@ class AdminController {
     ctx.body = {
       code: 200,
       data: res
+    }
+  }
+
+  async getRoutes (ctx) {
+    const user = await UsersModel.findOne({ _id: ctx._id }, { roles: 1 })
+    const { roles } = user
+    let menus = []
+    for (let i = 0; i < roles.length; i++) {
+      const role = roles[i]
+      const rights = await RolesModel.findOne({ role }, { menu: 1 })
+      menus = menus.concat(rights.menu)
+    }
+    menus = Array.from(new Set(menus))
+
+    ctx.body = {
+      code: 200,
+      data: menus
     }
   }
 }

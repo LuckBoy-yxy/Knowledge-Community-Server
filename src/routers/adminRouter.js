@@ -25,5 +25,6 @@ router.post('/delete-role', adminController.deleteRole)
 router.post('/update-role', adminController.updateRole)
 router.get('/get-roles', adminController.getRoles)
 router.get('/get-role-names', adminController.getRoleNames)
+router.get('/get-routes', adminController.getRoutes)
 
 export default router

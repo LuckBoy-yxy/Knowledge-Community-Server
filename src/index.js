@@ -12,6 +12,7 @@ import JWT from 'koa-jwt'
 import config from './config/index'
 import errorHandle from './common/errorHandle'
 import WebSocketServer from './config/WebSocket'
+import auth from './common/auth'
 
 const app = new Koa()
 const ws = new WebSocketServer()
@@ -42,7 +43,8 @@ const middleware = compose([
   json({ pretty: false, param: 'pretty' }),
   helmet(),
   errorHandle,
-  jwt
+  jwt,
+  auth
 ])
 
 if(!isDevMode) {

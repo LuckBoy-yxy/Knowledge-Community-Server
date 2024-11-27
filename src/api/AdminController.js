@@ -100,6 +100,14 @@ class AdminController {
       data: result
     }
   }
+
+  async getRoleNames (ctx) {
+    const res = await RolesModel.find({}, { menu: 0, desc: 0 })
+    ctx.body = {
+      code: 200,
+      data: res
+    }
+  }
 }
 
 export default new AdminController()

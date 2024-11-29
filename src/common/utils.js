@@ -71,3 +71,43 @@ export const rename = (obj, oldKey, newKey) => {
 
   return obj
 }
+
+export const sortObj = (arr, property) => {
+  return arr.sort((m, n) => m[property] - n[property])
+}
+
+export const getMenuData = (tree, rights) => {
+  const arr = []
+  for (let i = 0; i < tree.length; i++) {
+    const item = tree[i]
+    if (rights.includes(item._id + '')) {
+      if (item.type === 'menu') {
+        arr.push({
+          _id: item._id,
+          path: item.path,
+          meta: {
+            title: item.title,
+            hideInBread: item.hideInBread,
+            hideInMenu: item.hideInMenu,
+            notCache: item.notCache,
+            icon: item.icon
+          },
+          component: item.component,
+          children: getMenuData(item.children, rights)
+        })
+      } else if (item.type === 'link') {
+        arr.push({
+          _id: item._id,
+          path: item.path,
+          meta: {
+            title: item.title,
+            icon: item.icon,
+            href: item.link
+          }
+        })
+      }
+    }
+  }
+
+  return sortObj(arr, 'sort')
+}

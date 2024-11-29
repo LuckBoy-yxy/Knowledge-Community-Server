@@ -2,6 +2,8 @@ import MenuModel from '../model/Menus'
 import RolesModel from '../model/Roles'
 import UsersModel from '../model/User'
 
+import { getMenuData } from '../common/utils'
+
 class AdminController {
   async getMenu (ctx) {
     const res = await MenuModel.find({})
@@ -120,10 +122,13 @@ class AdminController {
       menus = menus.concat(rights.menu)
     }
     menus = Array.from(new Set(menus))
+    
+    const treeData = await MenuModel.find({})
+    const routes = getMenuData(treeData, menus)
 
     ctx.body = {
       code: 200,
-      data: menus
+      data: routes
     }
   }
 }

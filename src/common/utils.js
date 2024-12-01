@@ -76,11 +76,11 @@ export const sortObj = (arr, property) => {
   return arr.sort((m, n) => m[property] - n[property])
 }
 
-export const getMenuData = (tree, rights) => {
+export const getMenuData = (tree, rights, flag) => {
   const arr = []
   for (let i = 0; i < tree.length; i++) {
     const item = tree[i]
-    if (rights.includes(item._id + '')) {
+    if (rights.includes(item._id + '') || flag) {
       if (item.type === 'menu') {
         arr.push({
           _id: item._id,

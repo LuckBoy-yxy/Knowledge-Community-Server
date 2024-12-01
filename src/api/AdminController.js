@@ -124,7 +124,7 @@ class AdminController {
     menus = Array.from(new Set(menus))
     
     const treeData = await MenuModel.find({})
-    const routes = getMenuData(treeData, menus)
+    const routes = getMenuData(treeData, menus, ctx.isAdmin)
 
     ctx.body = {
       code: 200,

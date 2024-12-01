@@ -13,6 +13,7 @@ import config from './config/index'
 import errorHandle from './common/errorHandle'
 import WebSocketServer from './config/WebSocket'
 import auth from './common/auth'
+import { run } from './common/init'
 
 const app = new Koa()
 const ws = new WebSocketServer()
@@ -56,4 +57,5 @@ app.use(router())
 
 app.listen('3000', function() {
   console.log('http://127.0.0.1:3000')
+  run()
 })

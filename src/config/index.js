@@ -11,6 +11,7 @@ const baseUrl = process.env.NODE_ENV === 'production' ? 'http://www.toimc.com' :
 const uploadPath = process.env.NODE_ENV === 'production' ? 'app/public' : path.join(path.resolve(__dirname), '../../public')
 
 const adminEmail = ['3129166417@qq.com']
+const publicPath = [/^\/public/, /^\/login/]
 
 export default {
   DB_URL,
@@ -18,5 +19,6 @@ export default {
   JWT_SECRET,
   baseUrl,
   uploadPath,
-  adminEmail
+  adminEmail,
+  publicPath
 }

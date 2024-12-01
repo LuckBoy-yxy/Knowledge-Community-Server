@@ -111,3 +111,27 @@ export const getMenuData = (tree, rights, flag) => {
 
   return sortObj(arr, 'sort')
 }
+
+export const flatten = (arr) => {
+  while (arr.some((item) => Array.isArray(item))) {
+    arr = [].concat(...arr)
+  }
+  return arr
+}
+
+export const getRights = (tree, menus) => {
+  const arr = []
+  for (let item of tree) {
+    if (item.operations && item.operations.length > 0) {
+      for (let op of item.operations) {
+        if (menus.includes(op._id + '')) {
+          arr.push(op.path)
+        }
+      }
+    } else if (item.children && item.children.length > 0) {
+      arr.push(getRights(item.children, menus))
+    }
+  }
+
+  return flatten(arr)
+}

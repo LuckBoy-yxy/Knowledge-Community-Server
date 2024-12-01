@@ -2,7 +2,7 @@ import MenuModel from '../model/Menus'
 import RolesModel from '../model/Roles'
 import UsersModel from '../model/User'
 
-import { getMenuData } from '../common/utils'
+import { getMenuData, getRights } from '../common/utils'
 
 class AdminController {
   async getMenu (ctx) {
@@ -130,6 +130,27 @@ class AdminController {
       code: 200,
       data: routes
     }
+  }
+
+  async getOperations (ctx) {
+    const user = await UsersModel.findOne({ _id: ctx._id }, { roles: 1 })
+    const { roles } = user
+    let menus = []
+    for (let i = 0; i < roles.length; i++) {
+      const role = roles[i]
+      const rights = await RolesModel.findOne({ role }, { menu: 1 })
+      menus = menus.concat(rights.menu)
+    }
+    menus = Array.from(new Set(menus))
+    
+    const treeData = await MenuModel.find({})
+    const operations = getRights(treeData, menus)
+
+    return operations
+    // ctx.body = {
+    //   code: 200,
+    //   data: operations
+    // }
   }
 }
 

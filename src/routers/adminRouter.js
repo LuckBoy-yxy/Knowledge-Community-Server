@@ -26,5 +26,6 @@ router.post('/update-role', adminController.updateRole)
 router.get('/get-roles', adminController.getRoles)
 router.get('/get-role-names', adminController.getRoleNames)
 router.get('/get-routes', adminController.getRoutes)
+// router.get('/get-operations', adminController.getOperations)
 
 export default router

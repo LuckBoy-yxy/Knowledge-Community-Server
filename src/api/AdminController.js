@@ -1,6 +1,7 @@
 import MenuModel from '../model/Menus'
 import RolesModel from '../model/Roles'
 import UsersModel from '../model/User'
+import PostModel from '../model/Post'
 
 import { getMenuData, getRights } from '../common/utils'
 
@@ -158,6 +159,7 @@ class AdminController {
   async getStat (ctx) {
     let res = {}
     const inforCardData = []
+
     const time = moment().format('YYYY-MM-DD 00:00:00')
     const userNewCount = await UsersModel.find({
       created: { $gte: time }
@@ -172,8 +174,10 @@ class AdminController {
     //     })
     //   }
     // }).countDocuments()
+    const postsCount = await PostModel.find({}).countDocuments()
 
     inforCardData.push(userNewCount)
+    inforCardData.push(postsCount)
     res = {
       inforCardData
     }

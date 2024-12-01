@@ -2,6 +2,7 @@ import MenuModel from '../model/Menus'
 import RolesModel from '../model/Roles'
 import UsersModel from '../model/User'
 import PostModel from '../model/Post'
+import CommentsModel from '../model/Comments'
 
 import { getMenuData, getRights } from '../common/utils'
 
@@ -174,10 +175,16 @@ class AdminController {
     //     })
     //   }
     // }).countDocuments()
+
     const postsCount = await PostModel.find({}).countDocuments()
+
+    const commentsNewCount = await CommentsModel.find({
+      created: { $gte: time }
+    }).countDocuments()
 
     inforCardData.push(userNewCount)
     inforCardData.push(postsCount)
+    inforCardData.push(commentsNewCount)
     res = {
       inforCardData
     }

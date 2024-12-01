@@ -4,6 +4,8 @@ import UsersModel from '../model/User'
 
 import { getMenuData, getRights } from '../common/utils'
 
+import moment from 'moment'
+
 class AdminController {
   async getMenu (ctx) {
     const res = await MenuModel.find({})
@@ -151,6 +153,35 @@ class AdminController {
     //   code: 200,
     //   data: operations
     // }
+  }
+
+  async getStat (ctx) {
+    let res = {}
+    const inforCardData = []
+    const time = moment().format('YYYY-MM-DD 00:00:00')
+    const userNewCount = await UsersModel.find({
+      created: { $gte: time }
+    }).countDocuments()
+    // const userNewCount = await UsersModel.find({
+    //   created: {
+    //     $gte: moment().set({
+    //       hour: 0,
+    //       minute: 0,
+    //       second: 0,
+    //       millisecond: 0
+    //     })
+    //   }
+    // }).countDocuments()
+
+    inforCardData.push(userNewCount)
+    res = {
+      inforCardData
+    }
+
+    ctx.body = {
+      code: 200,
+      data: res
+    }
   }
 }
 

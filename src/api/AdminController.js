@@ -161,6 +161,7 @@ class AdminController {
   async getStat (ctx) {
     let res = {}
     const inforCardData = []
+    const newZero = new Date().setHours(0, 0, 0, 0)
 
     const time = moment().format('YYYY-MM-DD 00:00:00')
     const userNewCount = await UsersModel.find({
@@ -183,8 +184,8 @@ class AdminController {
       created: { $gte: time }
     }).countDocuments()
 
-    const startTime = moment(new Date().setHours(0, 0, 0, 0)).weekday(1).format()
-    const endTime = moment(new Date().setHours(0, 0, 0, 0)).weekday(8).format()
+    const startTime = moment(newZero).weekday(1).format()
+    const endTime = moment(newZero).weekday(8).format()
 
     const weekEndCount = await CommentsModel.find({
       created: { $gte: startTime, $lte: endTime },
@@ -197,7 +198,7 @@ class AdminController {
 
     const postWeekCount = await PostModel.find({
       created: { $gte: startTime, $lte: endTime }
-    })
+    }).countDocuments()
 
     inforCardData.push(userNewCount)
     inforCardData.push(postsCount)
@@ -213,9 +214,50 @@ class AdminController {
     postsCatalogCount.forEach(item => {
       pieData[item._id] = item.count
     })
+
+    const startMonth = moment(newZero).subtract(5, 'M').date(1).format()
+    // const endMonth = moment('2024-12-02').date(31).format('YYYY-MM-DD 23:59:59')
+    const endMonth = moment(newZero).add(1, 'M').date(1).format()
+    let monthData = await PostModel.aggregate([
+      { 
+        $match: {
+          created: {
+            $gte: new Date(startMonth),
+            $lte: new Date(endMonth)
+          }
+        }
+      },
+      {
+        $project: {
+          month: {
+            $dateToString: {
+              format: '%Y-%m',
+              date: '$created'
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$month',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ])
+    monthData = monthData.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item._id]: item.count
+      }
+    }, {})
+
     res = {
       inforCardData,
-      pieData
+      pieData,
+      monthData
     }
 
     ctx.body = {

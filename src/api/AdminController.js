@@ -205,8 +205,17 @@ class AdminController {
     inforCardData.push(weekEndCount)
     inforCardData.push(signWeebCount)
     inforCardData.push(postWeekCount)
+
+    const pieData = {}
+    const postsCatalogCount = await PostModel.aggregate([
+      { $group: { _id: '$catalog', count: { $sum: 1 } } }
+    ])
+    postsCatalogCount.forEach(item => {
+      pieData[item._id] = item.count
+    })
     res = {
-      inforCardData
+      inforCardData,
+      pieData
     }
 
     ctx.body = {

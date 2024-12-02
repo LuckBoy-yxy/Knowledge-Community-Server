@@ -3,6 +3,7 @@ import RolesModel from '../model/Roles'
 import UsersModel from '../model/User'
 import PostModel from '../model/Post'
 import CommentsModel from '../model/Comments'
+import SignRecordModel from '../model/SignRecord'
 
 import { getMenuData, getRights } from '../common/utils'
 
@@ -182,9 +183,28 @@ class AdminController {
       created: { $gte: time }
     }).countDocuments()
 
+    const startTime = moment(new Date().setHours(0, 0, 0, 0)).weekday(1).format()
+    const endTime = moment(new Date().setHours(0, 0, 0, 0)).weekday(8).format()
+
+    const weekEndCount = await CommentsModel.find({
+      created: { $gte: startTime, $lte: endTime },
+      isBest: '1'
+    }).countDocuments()
+
+    const signWeebCount = await SignRecordModel.find({
+      created: { $gte: startTime, $lte: endTime }
+    }).countDocuments()
+
+    const postWeekCount = await PostModel.find({
+      created: { $gte: startTime, $lte: endTime }
+    })
+
     inforCardData.push(userNewCount)
     inforCardData.push(postsCount)
     inforCardData.push(commentsNewCount)
+    inforCardData.push(weekEndCount)
+    inforCardData.push(signWeebCount)
+    inforCardData.push(postWeekCount)
     res = {
       inforCardData
     }

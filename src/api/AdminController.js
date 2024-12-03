@@ -254,10 +254,82 @@ class AdminController {
       }
     }, {})
 
+    const startDay = moment().subtract(6, 'day').format()
+    const _aggregate = async model => {
+      let result = await model.aggregate([
+        { 
+          $match: {
+            created: {
+              $gte: new Date(startDay)
+            }
+          }
+        },
+        {
+          $project: {
+            day: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$created'
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$day',
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { _id: 1 }
+        }
+      ])
+
+      result = result.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item._id]: item.count
+        }
+      }, {})
+
+      return result
+    }
+    const userWeekData = await _aggregate(UsersModel)
+    const signWeekData = await _aggregate(SignRecordModel)
+    const postWeekData = await _aggregate(PostModel)
+    const commentWeekData = await _aggregate(CommentsModel)
+    // console.log(userWeekData)
+    // console.log(signWeekData)
+    // console.log(postWeekData)
+    // console.log(commentWeekData)
+    const dataArr = []
+    for (let i = 0; i <= 6; i++) {
+      dataArr.push(moment().subtract(6 - i, 'day').format('YYYY-MM-DD'))
+    }
+    const addData = obj => {
+      const arr = []
+      dataArr.forEach(item => {
+        if (obj[item]) {
+          arr.push(obj[item])
+        } else {
+          arr.push(0)
+        }
+      })
+
+      return arr
+    }
+    const weekData = {
+      user: addData(userWeekData),
+      sign: addData(signWeekData),
+      post: addData(postWeekData),
+      comments: addData(commentWeekData)
+    }
+
     res = {
       inforCardData,
       pieData,
-      monthData
+      monthData,
+      weekData
     }
 
     ctx.body = {

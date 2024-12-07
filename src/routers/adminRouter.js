@@ -2,7 +2,7 @@ import Router from '@koa/router'
 import contentController from '../api/ContentController'
 import userController from '../api/UserController'
 import adminController from '../api/AdminController'
-import errorController from '@/api/ErrorController'
+import errorController from '../api/ErrorController'
 
 const router = new Router()
 router.prefix('/admin')

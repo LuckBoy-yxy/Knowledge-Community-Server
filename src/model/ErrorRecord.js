@@ -8,7 +8,8 @@ const ErrorRecordSchema = new Schema({
   code: { type: String, default: '' },
   method: { type: String, default: '' },
   path: { type: String, default: '' },
-  param: { type: String, default: '' },
+  // param: { type: String, default: '' },
+  param: { type: Schema.Types.Mixed, default: '' },
   username: { type: String, default: '' },
   stack: { type: String, default: '' },
   created: { type: Date }

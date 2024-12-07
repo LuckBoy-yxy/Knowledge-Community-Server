@@ -1,7 +1,7 @@
 import Router from '@koa/router'
 import userController from '../api/UserController'
 import contentController from '../api/ContentController'
-import errorController from '@/api/ErrorController'
+import errorController from '../api/ErrorController'
 
 const router = new Router()
 

@@ -2,6 +2,7 @@ import Router from '@koa/router'
 import contentController from '../api/ContentController'
 import userController from '../api/UserController'
 import adminController from '../api/AdminController'
+import errorController from '@/api/ErrorController'
 
 const router = new Router()
 router.prefix('/admin')
@@ -28,5 +29,7 @@ router.get('/get-role-names', adminController.getRoleNames)
 router.get('/get-routes', adminController.getRoutes)
 // router.get('/get-operations', adminController.getOperations)
 router.get('/getStat', adminController.getStat)
+router.get('/get-error', errorController.getErrorList)
+router.get('/delete-error', errorController.deleteError)
 
 export default router

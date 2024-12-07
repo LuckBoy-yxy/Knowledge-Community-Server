@@ -9,11 +9,16 @@ import json from 'koa-json'
 import compose from 'koa-compose'
 import compress from 'koa-compress'
 import JWT from 'koa-jwt'
+// import logger from 'koa-logger'
+
 import config from './config/index'
-import errorHandle from './common/errorHandle'
 import WebSocketServer from './config/WebSocket'
+import log4js from './config/log4'
+
+import errorHandle from './common/errorHandle'
 import auth from './common/auth'
 import { run } from './common/init'
+import logger from './common/logger'
 
 const app = new Koa()
 const ws = new WebSocketServer()
@@ -29,6 +34,7 @@ const jwt = JWT({
 })
 
 const middleware = compose([
+  logger,
   koaBody({
     multipart: true,
     formidable: {
@@ -45,7 +51,10 @@ const middleware = compose([
   helmet(),
   errorHandle,
   jwt,
-  auth
+  auth,
+  // logger()
+  isDevMode ? log4js.koaLogger(log4js.getLogger('http'), { level: 'auto' }) :
+  log4js.koaLogger(log4js.getLogger('access'), { level: 'auto' })
 ])
 
 if(!isDevMode) {

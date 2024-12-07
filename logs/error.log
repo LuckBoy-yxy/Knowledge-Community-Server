@@ -1,0 +1,7 @@
+[2024-12-07T12:44:53.411] [ERROR] error - /admin/add-menu POST 404 UnauthorizedError: Authentication Error
+    at Object.throw (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa\lib\context.js:97:11)
+    at jwt (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa-jwt\lib\index.js:66:26)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at cors (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\@koa\cors\index.js:109:16)
+    at serve (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa-static\index.js:53:9)
+    at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/logger.js:7:3)

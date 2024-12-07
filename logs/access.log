@@ -1,0 +1,2 @@
+[2024-12-07T12:35:19.369] [INFO] access - ::1 - - "GET /public/getCaptcha?sid=660c5edd-2396-4fad-9ced-d4846cf20a95 HTTP/1.1" 200 15035 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+[2024-12-07T12:51:09.487] [INFO] access - ::1 - - "GET /public/getCaptcha?sid=660c5edd-2396-4fad-9ced-d4846cf20a95 HTTP/1.1" 200 15927 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"

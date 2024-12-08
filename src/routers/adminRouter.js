@@ -30,6 +30,6 @@ router.get('/get-routes', adminController.getRoutes)
 // router.get('/get-operations', adminController.getOperations)
 router.get('/getStat', adminController.getStat)
 router.get('/get-error', errorController.getErrorList)
-router.get('/delete-error', errorController.deleteError)
+router.post('/delete-error', errorController.deleteError)
 
 export default router

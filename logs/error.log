@@ -42,3 +42,17 @@
     at cors (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\@koa\cors\index.js:109:16)
     at serve (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa-static\index.js:53:9)
     at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/logger.js:7:3)
+[2024-12-07T20:25:43.749] [ERROR] error - /admin/get-errorpage=1&pageSize=10 GET 404 InternalServerError: Internal Server Error
+    at Object.throw (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa\lib\context.js:97:11)
+    at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/errorHandle.js:11:16)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at cors (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\@koa\cors\index.js:109:16)
+    at serve (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa-static\index.js:53:9)
+    at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/logger.js:7:3)
+[2024-12-07T20:25:50.856] [ERROR] error - /admin/get-errorpage=1&pageSize=10 GET 404 InternalServerError: Internal Server Error
+    at Object.throw (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa\lib\context.js:97:11)
+    at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/errorHandle.js:11:16)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at cors (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\@koa\cors\index.js:109:16)
+    at serve (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\node_modules\koa-static\index.js:53:9)
+    at _default (F:\PlayUp\Project\LargeFrontEnd\code\Knowledge Community (PC)\Server\src\common\/logger.js:7:3)
